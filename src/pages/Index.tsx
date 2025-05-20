@@ -1,5 +1,7 @@
 
 import { ButtonWizard } from "@/components/ButtonWizard";
+import { ButtonWizardProvider } from "@/contexts/ButtonWizardContext";
+import { KeyboardShortcuts } from "@/components/KeyboardShortcuts";
 
 const Index = () => {
   return (
@@ -13,7 +15,10 @@ const Index = () => {
             Create, customize, and export beautiful buttons with our all-in-one button generator
           </p>
         </header>
-        <ButtonWizard />
+        <ButtonWizardProvider>
+          <ButtonWizard />
+          <KeyboardShortcuts />
+        </ButtonWizardProvider>
       </div>
     </div>
   );
