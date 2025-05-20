@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -84,11 +85,55 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'shake': {
+					'10%, 90%': {
+						transform: 'translate3d(-1px, 0, 0)'
+					},
+					'20%, 80%': {
+						transform: 'translate3d(2px, 0, 0)'
+					},
+					'30%, 50%, 70%': {
+						transform: 'translate3d(-4px, 0, 0)'
+					},
+					'40%, 60%': {
+						transform: 'translate3d(4px, 0, 0)'
+					}
+				},
+				'pulse': {
+					'0%, 100%': {
+						opacity: '1'
+					},
+					'50%': {
+						opacity: '0.7'
+					}
+				},
+				'bounce': {
+					'0%, 100%': {
+						transform: 'translateY(0)'
+					},
+					'50%': {
+						transform: 'translateY(-10px)'
+					}
+				},
+				'slideFade': {
+					'0%': {
+						transform: 'translateX(0)',
+						opacity: '1'
+					},
+					'100%': {
+						transform: 'translateX(8px)',
+						opacity: '0.9'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'shake': 'shake 0.82s cubic-bezier(.36,.07,.19,.97) infinite',
+				'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+				'bounce': 'bounce 1s infinite',
+				'slideFade': 'slideFade 1s ease-in-out infinite'
 			}
 		}
 	},
