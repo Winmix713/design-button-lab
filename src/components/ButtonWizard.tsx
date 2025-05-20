@@ -8,11 +8,21 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useButtonWizard } from "@/contexts/ButtonWizardContext";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { useToast } from "@/hooks/use-toast";
-import { Undo2, Redo2 } from "lucide-react";
+import { Undo2, Redo2, Sparkles, PaintBucket } from "lucide-react";
+import { AnimationBuilder } from "./AnimationBuilder";
+import { ThemeSelector } from "./ThemeSelector";
+import { EnhancedExportOptions } from "./EnhancedExportOptions";
 
 export function ButtonWizard() {
   const { 
-    state: { buttonStyle, activeTab },
+    state: { 
+      buttonStyle, 
+      activeTab,
+      showAnimationBuilder,
+      showThemeSelector,
+      customAnimations,
+      currentTheme
+    },
     setActiveTab,
     updateStyle,
     resetStyle,
@@ -20,12 +30,22 @@ export function ButtonWizard() {
     undo,
     redo,
     canUndo,
-    canRedo
+    canRedo,
+    toggleAnimationBuilder,
+    toggleThemeSelector,
+    saveCustomAnimation,
+    getCustomAnimation,
+    applyTheme
   } = useButtonWizard();
   const { toast } = useToast();
 
   // Initialize keyboard shortcuts
   useKeyboardShortcuts();
+  
+  // Get the current custom animation if exists
+  const currentCustomAnimation = buttonStyle.animation === 'custom' && buttonStyle.customAnimationName
+    ? getCustomAnimation(buttonStyle.customAnimationName)
+    : undefined;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -76,6 +96,28 @@ export function ButtonWizard() {
           </div>
           
           <TabsContent value="style" className="space-y-6">
+            {/* Special Feature Buttons */}
+            <div className="flex flex-wrap gap-4 mb-4">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="flex items-center gap-2"
+                onClick={toggleAnimationBuilder}
+              >
+                <Sparkles className="h-4 w-4" />
+                Animation Builder
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="flex items-center gap-2"
+                onClick={toggleThemeSelector}
+              >
+                <PaintBucket className="h-4 w-4" />
+                Theme Selector {currentTheme && `(${currentTheme.name})`}
+              </Button>
+            </div>
+            
             <StylePanel 
               buttonStyle={buttonStyle} 
               onStyleChange={updateStyle} 
@@ -85,7 +127,12 @@ export function ButtonWizard() {
           </TabsContent>
           
           <TabsContent value="code">
-            <CodePanel buttonStyle={buttonStyle} />
+            {activeTab === "code" && (
+              <EnhancedExportOptions 
+                buttonStyle={buttonStyle} 
+                customAnimation={currentCustomAnimation}
+              />
+            )}
           </TabsContent>
         </Tabs>
       </Card>
@@ -115,6 +162,24 @@ export function ButtonWizard() {
           </div>
         </div>
       </Card>
+      
+      {/* Animation Builder Modal */}
+      {showAnimationBuilder && (
+        <AnimationBuilder 
+          buttonStyle={buttonStyle} 
+          onSaveAnimation={saveCustomAnimation} 
+          onClose={toggleAnimationBuilder} 
+        />
+      )}
+      
+      {/* Theme Selector Modal */}
+      {showThemeSelector && (
+        <ThemeSelector 
+          onSelectTheme={applyTheme} 
+          onClose={toggleThemeSelector} 
+          currentThemeName={currentTheme?.name}
+        />
+      )}
     </div>
   );
 }

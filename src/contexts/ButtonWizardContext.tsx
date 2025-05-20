@@ -2,6 +2,8 @@
 import React, { createContext, useContext, useReducer, ReactNode } from "react";
 import { ButtonStyle } from "@/types/buttonTypes";
 import { initialButtonStyles, presets } from "@/lib/buttonStyles";
+import { CustomAnimation, defaultCustomAnimation } from "@/lib/animations";
+import { Theme, applyThemeToButton, defaultTheme } from "@/lib/themes";
 
 // Define the state shape
 interface ButtonWizardState {
@@ -9,6 +11,11 @@ interface ButtonWizardState {
   activeTab: string;
   undoStack: ButtonStyle[];
   redoStack: ButtonStyle[];
+  customAnimations: CustomAnimation[];
+  showAnimationBuilder: boolean;
+  showThemeSelector: boolean;
+  currentTheme: Theme | null;
+  currentThemeVariant: keyof Theme | null;
 }
 
 // Initial state
@@ -17,6 +24,11 @@ const initialState: ButtonWizardState = {
   activeTab: "style",
   undoStack: [],
   redoStack: [],
+  customAnimations: [],
+  showAnimationBuilder: false,
+  showThemeSelector: false,
+  currentTheme: null,
+  currentThemeVariant: null
 };
 
 // Define action types
@@ -26,7 +38,12 @@ type ButtonWizardAction =
   | { type: "RESET_STYLE" }
   | { type: "APPLY_PRESET"; payload: ButtonStyle }
   | { type: "UNDO" }
-  | { type: "REDO" };
+  | { type: "REDO" }
+  | { type: "TOGGLE_ANIMATION_BUILDER" }
+  | { type: "TOGGLE_THEME_SELECTOR" }
+  | { type: "ADD_CUSTOM_ANIMATION"; payload: CustomAnimation }
+  | { type: "APPLY_CUSTOM_ANIMATION"; payload: string }
+  | { type: "APPLY_THEME"; payload: { theme: Theme; variant: keyof Theme } };
 
 // Create the reducer
 function buttonWizardReducer(
@@ -52,6 +69,8 @@ function buttonWizardReducer(
         buttonStyle: initialButtonStyles,
         undoStack: [state.buttonStyle, ...state.undoStack.slice(0, 9)],
         redoStack: [],
+        currentTheme: null,
+        currentThemeVariant: null,
       };
     case "APPLY_PRESET":
       return {
@@ -80,6 +99,67 @@ function buttonWizardReducer(
         redoStack: remainingRedoStack,
         undoStack: [state.buttonStyle, ...state.undoStack],
       };
+    case "TOGGLE_ANIMATION_BUILDER":
+      return {
+        ...state,
+        showAnimationBuilder: !state.showAnimationBuilder,
+      };
+    case "TOGGLE_THEME_SELECTOR":
+      return {
+        ...state,
+        showThemeSelector: !state.showThemeSelector,
+      };
+    case "ADD_CUSTOM_ANIMATION":
+      // Check if an animation with this name already exists
+      const existingIndex = state.customAnimations.findIndex(
+        anim => anim.name === action.payload.name
+      );
+      
+      let updatedAnimations: CustomAnimation[];
+      
+      if (existingIndex >= 0) {
+        // Replace existing animation
+        updatedAnimations = [...state.customAnimations];
+        updatedAnimations[existingIndex] = action.payload;
+      } else {
+        // Add new animation
+        updatedAnimations = [...state.customAnimations, action.payload];
+      }
+      
+      return {
+        ...state,
+        customAnimations: updatedAnimations,
+        buttonStyle: {
+          ...state.buttonStyle,
+          animation: "custom",
+          customAnimationName: action.payload.name
+        },
+        undoStack: [state.buttonStyle, ...state.undoStack.slice(0, 9)],
+        redoStack: [],
+      };
+    case "APPLY_CUSTOM_ANIMATION":
+      return {
+        ...state,
+        buttonStyle: {
+          ...state.buttonStyle,
+          animation: "custom",
+          customAnimationName: action.payload
+        },
+        undoStack: [state.buttonStyle, ...state.undoStack.slice(0, 9)],
+        redoStack: [],
+      };
+    case "APPLY_THEME":
+      const { theme, variant } = action.payload;
+      const themedButtonStyle = applyThemeToButton(state.buttonStyle, theme, variant);
+      
+      return {
+        ...state,
+        buttonStyle: themedButtonStyle,
+        currentTheme: theme,
+        currentThemeVariant: variant,
+        undoStack: [state.buttonStyle, ...state.undoStack.slice(0, 9)],
+        redoStack: [],
+      };
     default:
       return state;
   }
@@ -97,6 +177,12 @@ interface ButtonWizardContextType {
   canUndo: boolean;
   canRedo: boolean;
   availablePresets: typeof presets;
+  toggleAnimationBuilder: () => void;
+  toggleThemeSelector: () => void;
+  saveCustomAnimation: (animation: CustomAnimation) => void;
+  applyCustomAnimation: (animationName: string) => void;
+  getCustomAnimation: (name: string | undefined) => CustomAnimation | undefined;
+  applyTheme: (theme: Theme, variant: keyof Theme) => void;
 }
 
 const ButtonWizardContext = createContext<ButtonWizardContextType | undefined>(undefined);
@@ -132,6 +218,34 @@ export function ButtonWizardProvider({ children }: ButtonWizardProviderProps) {
   const redo = () => {
     dispatch({ type: "REDO" });
   };
+  
+  const toggleAnimationBuilder = () => {
+    dispatch({ type: "TOGGLE_ANIMATION_BUILDER" });
+  };
+  
+  const toggleThemeSelector = () => {
+    dispatch({ type: "TOGGLE_THEME_SELECTOR" });
+  };
+  
+  const saveCustomAnimation = (animation: CustomAnimation) => {
+    dispatch({ type: "ADD_CUSTOM_ANIMATION", payload: animation });
+  };
+  
+  const applyCustomAnimation = (animationName: string) => {
+    dispatch({ type: "APPLY_CUSTOM_ANIMATION", payload: animationName });
+  };
+  
+  const getCustomAnimation = (name: string | undefined): CustomAnimation | undefined => {
+    if (!name) return undefined;
+    return state.customAnimations.find(anim => anim.name === name);
+  };
+  
+  const applyTheme = (theme: Theme, variant: keyof Theme) => {
+    dispatch({ 
+      type: "APPLY_THEME", 
+      payload: { theme, variant } 
+    });
+  };
 
   const value = {
     state,
@@ -144,6 +258,12 @@ export function ButtonWizardProvider({ children }: ButtonWizardProviderProps) {
     canUndo: state.undoStack.length > 0,
     canRedo: state.redoStack.length > 0,
     availablePresets: presets,
+    toggleAnimationBuilder,
+    toggleThemeSelector,
+    saveCustomAnimation,
+    applyCustomAnimation,
+    getCustomAnimation,
+    applyTheme
   };
 
   return (

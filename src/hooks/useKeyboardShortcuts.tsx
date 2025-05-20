@@ -4,7 +4,16 @@ import { useButtonWizard } from "@/contexts/ButtonWizardContext";
 import { useToast } from "@/hooks/use-toast";
 
 export function useKeyboardShortcuts() {
-  const { undo, redo, canUndo, canRedo, resetStyle } = useButtonWizard();
+  const { 
+    undo, 
+    redo, 
+    canUndo, 
+    canRedo, 
+    resetStyle, 
+    setActiveTab,
+    toggleAnimationBuilder,
+    toggleThemeSelector
+  } = useButtonWizard();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -53,11 +62,51 @@ export function useKeyboardShortcuts() {
           description: "Button style reset to defaults",
         });
       }
+      
+      // Animation Builder: Alt+A
+      if (event.altKey && event.key === "a") {
+        event.preventDefault();
+        toggleAnimationBuilder();
+        toast({
+          title: "Animation Builder",
+          description: "Animation Builder opened",
+        });
+      }
+      
+      // Theme Selector: Alt+T
+      if (event.altKey && event.key === "t") {
+        event.preventDefault();
+        toggleThemeSelector();
+        toast({
+          title: "Theme Selector",
+          description: "Theme Selector opened",
+        });
+      }
+      
+      // Switch to Code tab: Alt+C
+      if (event.altKey && event.key === "c") {
+        event.preventDefault();
+        setActiveTab("code");
+        toast({
+          title: "Tab Change",
+          description: "Switched to Code tab",
+        });
+      }
+      
+      // Switch to Style tab: Alt+S
+      if (event.altKey && event.key === "s") {
+        event.preventDefault();
+        setActiveTab("style");
+        toast({
+          title: "Tab Change",
+          description: "Switched to Style tab",
+        });
+      }
     }
 
     window.addEventListener("keydown", handleKeyDown);
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [undo, redo, canUndo, canRedo, resetStyle, toast]);
+  }, [undo, redo, canUndo, canRedo, resetStyle, setActiveTab, toggleAnimationBuilder, toggleThemeSelector, toast]);
 }
