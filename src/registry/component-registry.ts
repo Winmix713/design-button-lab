@@ -1,0 +1,240 @@
+import { ComponentRegistryType } from "../types/component-types";
+
+// Registry of all available components
+export const componentRegistry: ComponentRegistryType = {
+  "button": {
+    name: "Button",
+    description: "Interactive element that triggers an action when pressed",
+    category: "input",
+    icon: "lucide:square",
+    defaultState: {
+      componentType: "button",
+      text: "Button",
+      iconLeft: "",
+      iconRight: "",
+      customCSS: "",
+      style: {
+        color: "#ffffff",
+        backgroundColor: "#006FEE",
+        borderColor: "#006FEE",
+        borderWidth: "1px",
+        borderRadius: "8px",
+        fontWeight: "500",
+        fontSize: "16px",
+        paddingTop: "8px",
+        paddingRight: "16px",
+        paddingBottom: "8px",
+        paddingLeft: "16px",
+        textAlign: "center",
+        cursor: "pointer",
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        transitionProperty: "all",
+        transitionDuration: "150ms",
+        transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+      },
+      hoverStyle: {
+        backgroundColor: "#0057b7",
+        borderColor: "#0057b7",
+        transform: "scale(1.02)",
+      },
+      activeStyle: {
+        backgroundColor: "#004494",
+        borderColor: "#004494",
+      },
+    }
+  },
+  "card": {
+    name: "Card",
+    description: "Container for related content and actions",
+    category: "layout",
+    icon: "lucide:layout",
+    defaultState: {
+      componentType: "card",
+      showHeader: true,
+      headerTitle: "Card Title",
+      headerSubtitle: "Card Subtitle",
+      showImage: true,
+      imagePosition: "top",
+      imageHeight: "h-48",
+      imageUrl: "",
+      imageAltText: "",
+      bodyContent: "This is a sample card content. You can customize this text and add more elements.",
+      showFooter: true,
+      footerContent: "",
+      backgroundType: "solid",
+      isHoverable: false,
+      isPressable: false,
+      isBlurred: false,
+      layoutType: "standard",
+      style: {
+        backgroundColor: "#ffffff",
+        borderColor: "#e4e4e7",
+        borderWidth: "1px",
+        borderRadius: "12px",
+        boxShadow: "0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06)",
+        width: "100%",
+        maxWidth: "400px",
+        overflow: "hidden",
+        paddingTop: "0px",
+        paddingRight: "0px",
+        paddingBottom: "0px",
+        paddingLeft: "0px",
+        transitionProperty: "all",
+        transitionDuration: "150ms",
+        transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+      },
+      hoverStyle: {
+        boxShadow: "0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05)",
+        transform: "translateY(-4px)",
+      },
+      activeStyle: {},
+    }
+  },
+  "badge": {
+    name: "Badge",
+    description: "Small status descriptor for UI elements",
+    category: "display",
+    icon: "lucide:badge",
+    defaultState: {
+      componentType: "badge",
+      text: "Badge",
+      style: {
+        color: "#ffffff",
+        backgroundColor: "#006FEE",
+        borderRadius: "9999px",
+        fontSize: "12px",
+        fontWeight: "500",
+        paddingTop: "2px",
+        paddingRight: "8px",
+        paddingBottom: "2px",
+        paddingLeft: "8px",
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }
+    }
+  },
+  "avatar": {
+    name: "Avatar",
+    description: "Visual representation of a user or entity",
+    category: "display",
+    icon: "lucide:user",
+    defaultState: {
+      componentType: "avatar",
+      name: "John Doe",
+      src: "",
+      showFallback: true,
+      style: {
+        width: "40px",
+        height: "40px",
+        borderRadius: "9999px",
+        backgroundColor: "#006FEE",
+        color: "#ffffff",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: "16px",
+        fontWeight: "500",
+        overflow: "hidden",
+      }
+    }
+  },
+  "input": {
+    name: "Input",
+    description: "Form control for user text entry",
+    category: "input",
+    icon: "lucide:text-cursor-input",
+    defaultState: {
+      componentType: "input",
+      placeholder: "Enter text...",
+      label: "Label",
+      helperText: "",
+      isRequired: false,
+      isDisabled: false,
+      isReadOnly: false,
+      style: {
+        width: "100%",
+        borderWidth: "1px",
+        borderColor: "#d4d4d8",
+        borderRadius: "8px",
+        paddingTop: "8px",
+        paddingRight: "12px",
+        paddingBottom: "8px",
+        paddingLeft: "12px",
+        fontSize: "16px",
+        lineHeight: "1.5",
+        backgroundColor: "#ffffff",
+        color: "#18181b",
+      }
+    }
+  },
+  "checkbox": {
+    name: "Checkbox",
+    description: "Control that allows selecting multiple options",
+    category: "input",
+    icon: "lucide:check-square",
+    defaultState: {
+      componentType: "checkbox",
+      label: "Checkbox",
+      isChecked: false,
+      isDisabled: false,
+      isIndeterminate: false,
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: "8px",
+        cursor: "pointer",
+      }
+    }
+  },
+  "switch": {
+    name: "Switch",
+    description: "Toggle control for binary states",
+    category: "input",
+    icon: "lucide:toggle-right",
+    defaultState: {
+      componentType: "switch",
+      label: "Switch",
+      isSelected: false,
+      isDisabled: false,
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: "8px",
+        cursor: "pointer",
+      }
+    }
+  },
+  "dropdown": {
+    name: "Dropdown",
+    description: "Menu that allows selecting from multiple options",
+    category: "input",
+    icon: "lucide:chevron-down-square",
+    defaultState: {
+      componentType: "dropdown",
+      placeholder: "Select an option",
+      items: [
+        { key: "item-1", label: "Option 1" },
+        { key: "item-2", label: "Option 2" },
+        { key: "item-3", label: "Option 3" },
+      ],
+      style: {
+        width: "100%",
+        borderWidth: "1px",
+        borderColor: "#d4d4d8",
+        borderRadius: "8px",
+        paddingTop: "8px",
+        paddingRight: "12px",
+        paddingBottom: "8px",
+        paddingLeft: "12px",
+        fontSize: "16px",
+        lineHeight: "1.5",
+        backgroundColor: "#ffffff",
+        color: "#18181b",
+        cursor: "pointer",
+      }
+    }
+  },
+};

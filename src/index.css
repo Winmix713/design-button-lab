@@ -2,100 +2,168 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+@layer utilities {
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
   }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
+/* Step indicator connector line */
+.step-connector {
+  position: relative;
+}
 
-  body {
-    @apply bg-background text-foreground;
+.step-connector::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -50%;
+  right: 50%;
+  height: 2px;
+  background-color: hsl(var(--heroui-primary));
+  z-index: -1;
+}
+
+.step-connector-incomplete::before {
+  background-color: hsl(var(--heroui-default-200));
+}
+
+/* Animations for wizard transitions */
+.wizard-slide-enter {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.wizard-slide-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.wizard-slide-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.wizard-slide-exit-active {
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .wizard-step-indicator {
+    overflow-x: auto;
+    padding-bottom: 1rem;
   }
+}
+
+/* Preview mode specific styles */
+.preview-grid {
+  background-size: 40px 40px;
+  background-image:
+    linear-gradient(to right, rgba(0, 111, 238, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 111, 238, 0.05) 1px, transparent 1px);
+}
+
+.preview-annotation {
+  position: relative;
+}
+
+.preview-annotation::after {
+  content: attr(data-annotation);
+  position: absolute;
+  top: -24px;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: all 0.2s ease;
+  pointer-events: none;
+}
+
+.preview-annotation:hover::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Animation for mode switching */
+.mode-switch-enter {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.mode-switch-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.mode-switch-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.mode-switch-exit-active {
+  opacity: 0;
+  transform: scale(1.05);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* Responsive preview frames */
+.preview-frame {
+  position: relative;
+  transition: all 0.3s ease;
+  transform-origin: top left;
+}
+
+.preview-frame-mobile {
+  max-width: 375px;
+  border-radius: 24px;
+  box-shadow: 0 0 0 10px #333, 0 0 0 12px #222;
+}
+
+.preview-frame-tablet {
+  max-width: 768px;
+  border-radius: 12px;
+  box-shadow: 0 0 0 16px #333, 0 0 0 18px #222;
+}
+
+/* Rulers */
+.ruler-h, .ruler-v {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.05);
+  z-index: 10;
+}
+
+.ruler-h {
+  height: 1px;
+  left: 0;
+  right: 0;
+}
+
+.ruler-v {
+  width: 1px;
+  top: 0;
+  bottom: 0;
+}
+
+.ruler-label {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  font-size: 10px;
+  padding: 2px 4px;
+  border-radius: 2px;
+  z-index: 20;
 }
