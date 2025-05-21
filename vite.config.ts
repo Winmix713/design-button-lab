@@ -1,3 +1,4 @@
+
 import react from "@vitejs/plugin-react";
 import {defineConfig} from "vite";
 
@@ -7,6 +8,7 @@ import vitePluginInjectDataLocator from "./plugins/vite-plugin-inject-data-locat
 export default defineConfig({
   plugins: [react(), vitePluginInjectDataLocator()],
   server: {
+    port: 8080,
     allowedHosts: true,
   },
 });

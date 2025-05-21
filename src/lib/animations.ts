@@ -1,4 +1,6 @@
 
+import { ButtonStyle } from "@/types/buttonTypes";
+
 export type EasingFunction = 
   'linear' | 
   'ease' | 
@@ -25,6 +27,7 @@ export interface KeyframeStep {
     backgroundColor?: string;
     borderColor?: string;
     boxShadow?: string;
+    backgroundPosition?: string; // Added this property to fix the error
   };
 }
 
